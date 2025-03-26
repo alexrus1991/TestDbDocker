@@ -1,0 +1,49 @@
+services:
+  mssql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql-server
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_TCP_PORT=1433
+    ports:
+      - "${DB_PORT}:1433"
+    volumes:
+      - data:/var/opt/mssql/
+    networks:
+      - back
+        
+
+  api:
+    build: ./WebAppDocker
+    depends_on:
+      - mssql-server
+    ports:
+      - "${WEBAPI_PORT_2}:8081"
+      - "${WEBAPI_PORT}:8080"
+    networks:
+      - midle
+      - back
+  
+  blazorapp:
+    build: ./BlazorApp
+    depends_on:
+      - api
+    ports:
+      - "${WEBCLIENT}:80"
+    networks:
+      - front
+      - midle
+
+networks:
+  back:
+    internal: true
+  
+  midle:
+    internal: false
+  
+  front:
+    
+
+volumes:
+  data:

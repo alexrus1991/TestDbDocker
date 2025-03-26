@@ -1,0 +1,15 @@
+﻿@page "/produit"
+@using BlazorApp.Models
+
+<h3>Produit</h3>
+
+@foreach (Produitt p in Produits)
+{
+    <tr>
+        <th>@p.Name</th>
+        <th>@p.Price</th>
+    </tr>
+}
+@code {
+
+}
